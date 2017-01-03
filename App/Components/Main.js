@@ -5,7 +5,7 @@ import {
     View,
     TextInput,
     TouchableHighlight,
-    ActivityIndicatorIOS
+    ActivityIndicator
 } from 'react-native';
 
 import Dashboard from './Dashboard';
@@ -38,12 +38,11 @@ export default class Main extends Component {
                         isLoading: false
                     })
                 } else {
-                    console.log(res);
                     this.props.navigator.push({
                         title: res.name || 'Select on option',
                         component: Dashboard,
                         passProps: {userInfo: res}
-                    })
+                    });
                     this.setState({
                         isLoading: false,
                         error: false,
@@ -57,6 +56,10 @@ export default class Main extends Component {
         // reroute in to next state
     }
     render() {
+        var showErr = (
+            this.state.error ? <Text>{this.state.error}</Text> : <View/>
+        );
+
         return (
             <View style={styles.mainContainer}>
                 <Text style={styles.title}>Search for a Github user</Text>
@@ -72,6 +75,12 @@ export default class Main extends Component {
                 >
                     <Text style={styles.buttonText}>SEARCH</Text>
                 </TouchableHighlight>
+                <ActivityIndicator
+                    animating = {this.state.isLoading}
+                    color='#111'
+                    size='large'
+                />
+                {showErr}
             </View>
         )
     }
