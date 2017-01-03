@@ -8,6 +8,8 @@ import {
     ActivityIndicatorIOS
 } from 'react-native';
 
+import api from '../Utils/api';
+
 export default class Main extends Component {
     constructor(props){
         super(props);
@@ -27,6 +29,27 @@ export default class Main extends Component {
         this.setState({
             isLoading: true
         });
+        api.getBio(this.state.username)
+            .then((res) => {
+                if(res.message === 'Not Found'){
+                    this.setState({
+                        error: 'User not found',
+                        isLoading: false
+                    })
+                } else {
+                    this.props.navigator.push({
+                        title: res.name || 'Select on option'
+                        component: Dashboard,
+                        passProps: {userInfo: res}
+                    })
+                    this.setState({
+                        isLoading: false,
+                        error: false,
+                        userName: ''
+                    })
+                }
+
+            });
         console.log('SUBMIT', this.state.username);
         // get data from github
         // reroute in to next state
